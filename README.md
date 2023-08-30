@@ -1,1 +1,1 @@
-A News app which will show
+A new teller website which fetch the top headlines of diffrent countries from newsapi..
