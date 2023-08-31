@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import NewsGrid from './components/NewsGrid';
 import Search from './components/Search';
 import Footer from './components/Footer';
+import InfinitScroll from './components/NewsGrid_infiniteScroll';
 
 import {
   BrowserRouter as Router,
@@ -32,7 +33,7 @@ class App extends Component {
           <Route exact path='/health' element={<NewsGrid key='health' country='in' category='health' name='Health' pageSize={this.page} />}></Route>
           <Route exact path='/science' element={<NewsGrid key='science' country='in' category='science' name='Science'  pageSize={this.page} />}></Route>
           <Route exact path='/sports' element={<NewsGrid key='sports' country='in' category='sports' name='Sports' pageSize={this.page} />}></Route>
-          <Route exact path='/technology' element={<NewsGrid key='technology' country='in' category='technology' name='Technology' pageSize={this.page} />}></Route>
+          <Route exact path='/technology' element={<InfinitScroll key='technology' country='in' category='technology' name='Technology' pageSize={this.page} />}></Route>
         </Routes>
         <Footer />
       </Router>
