@@ -17,7 +17,8 @@ export default class NewsGrid extends Component {
         }
     }
     async pageUpdate() {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e6adcf3f30114fe5b6fbe763394441d7&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        this.props.setProgress(10)
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.api}&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
@@ -26,6 +27,7 @@ export default class NewsGrid extends Component {
             totalResults: parsedData.totalResults,
             loading: false
         })
+        this.props.setProgress(100)
     }
 
     async componentDidMount() {
@@ -33,8 +35,9 @@ export default class NewsGrid extends Component {
     }
 
     fetchData = async () => {
+        this.props.setProgress(10)
         this.setState({ page: this.state.page + 1 })
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e6adcf3f30114fe5b6fbe763394441d7&page=${this.state.page+1}&pageSize=${this.props.pageSize}`
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.api}&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
@@ -45,6 +48,7 @@ export default class NewsGrid extends Component {
                 loading: false
             })
         }, 300);
+        this.props.setProgress(100)
     }
 
     render() {
@@ -64,9 +68,10 @@ export default class NewsGrid extends Component {
                     <div className="container my-3">
                         <div className='row'>
                             {(this.state.articles.map((elements) => {
-                                return <div className="col-sm-6 col-lg-4" key={elements.url} >
-                                    <News title={elements.title ? elements.title.slice(0, 65) : ""} description={elements.description ? elements.description.slice(0, 90) : "Description is not available  " + this.dot} newsUrl={elements.url} time={elements.publishedAt.replace('T', ' at ').slice(0, 19)} />
-                                </div>
+                                if (elements.title || elements.description || elements.newsUrl || elements.publishedAt)
+                                    return <div className="col-sm-6 col-lg-4" key={elements.url} >
+                                        <News title={elements.title ? elements.title.slice(0, 65) : ""} description={elements.description ? elements.description.slice(0, 90) : "Description is not available  " + this.dot} newsUrl={elements.url} time={elements.publishedAt.replace('T', ' at ').slice(0, 19)} />
+                                    </div>
                             }))}
                         </div>
                     </div>

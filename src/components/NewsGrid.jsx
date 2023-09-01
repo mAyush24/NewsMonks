@@ -29,16 +29,18 @@ export default class NewsGrid extends Component {
         }
     }
     async pageUpdate() {
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=e6adcf3f30114fe5b6fbe763394441d7&page=${this.state.page}&pageSize=${this.props.pageSize}`
+        this.props.setProgress(10)
+        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.api}&page=${this.state.page}&pageSize=${this.props.pageSize}`
         this.setState({ loading: true })
         let data = await fetch(url);
         let parsedData = await data.json();
+        this.props.setProgress(60)
         this.setState({
             articles: parsedData.articles,
             totalResults: parsedData.totalResults,
             loading: false
         })
-        console.log(this.state.page)
+        this.props.setProgress(100)
     }
 
     async componentDidMount() {
@@ -79,9 +81,10 @@ export default class NewsGrid extends Component {
                 </div>
                 <div className='row'>
                     {!this.state.loading ? (this.state.articles.map((elements) => {
-                        return <div className="col-sm-6 col-lg-4" key={elements.url} >
-                            <News title={elements.title ? elements.title.slice(0, 65) : ""} description={elements.description ? elements.description.slice(0, 90) : "Description is not available  " + this.dot} newsUrl={elements.url} time={elements.publishedAt.replace('T', ' at ').slice(0, 19)} />
-                        </div>
+                        if (elements.title || elements.description || elements.newsUrl || elements.publishedAt)
+                            return <div className="col-sm-6 col-lg-4" key={elements.url} >
+                                <News title={elements.title ? elements.title.slice(0, 65) : ""} description={elements.description ? elements.description.slice(0, 90) : "Description is not available  " + this.dot} newsUrl={elements.url} time={elements.publishedAt.replace('T', ' at ').slice(0, 19)} />
+                            </div>
                     })) : <Spinner />}
                 </div>
             </div>
